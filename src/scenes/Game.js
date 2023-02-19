@@ -4,7 +4,7 @@ class Game extends Phaser.Scene {
     super({ key: "game" });
   }
   preload() {
-    this.load.image("background", "/public/img/background.png");
+    this.load.image("background", "./img/background.png");
     // this.load.image("gameover", "../resources/congratulations.png");
   }
   create() {
