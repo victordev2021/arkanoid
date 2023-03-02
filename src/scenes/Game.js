@@ -1,7 +1,11 @@
 import Phaser from "phaser";
+import { Scoreboard } from "../components/Scoreboard";
 class Game extends Phaser.Scene {
   constructor() {
     super({ key: "game" });
+  }
+  init() {
+    this.scoreboard = new Scoreboard(this);
   }
   preload() {
     this.load.image("background", "./img/background.png");
@@ -15,6 +19,8 @@ class Game extends Phaser.Scene {
     this.gameoverImage = this.add.image(400, 90, "gameover");
     this.gameoverImage.visible = false;
 
+    this.scoreboard.create();
+
     this.platform = this.physics.add.image(400, 460, "platform").setImmovable();
     this.platform.body.allowGravity = false;
     // this.platform.setVelocity(-100, -10);
@@ -25,10 +31,20 @@ class Game extends Phaser.Scene {
       velocity = 0 - velocity;
     }
     this.ball.setVelocity(velocity, 10);
-    this.physics.add.collider(this.ball, this.platform);
+    this.physics.add.collider(
+      this.ball,
+      this.platform,
+      this.platformImpact,
+      null,
+      this
+    );
     this.ball.setBounce(1);
 
     this.cursors = this.input.keyboard.createCursorKeys();
+  }
+  platformImpact() {
+    this.scoreboard.incrementPoints(1);
+    // this.ball.setVelocity(10, -1000);
   }
   update() {
     if (this.cursors.left.isDown) {
